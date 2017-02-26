@@ -1,3 +1,5 @@
+import java.util.Date
+
 import org.scalatest.{Matchers, FlatSpec}
 
 /**
@@ -10,5 +12,9 @@ class OfferTests extends FlatSpec with Matchers {
     offer.currentPrice should be > 0.00
   }
 
+  it should "have a last modified date" in {
+    val offer = new Offer()
+    offer.lastModified shouldBe a [Date]
+  }
 
 }
