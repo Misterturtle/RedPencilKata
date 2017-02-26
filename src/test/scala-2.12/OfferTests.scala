@@ -23,11 +23,12 @@ class OfferTests extends FlatSpec with Matchers {
     offer.currentPrice shouldEqual 9.5
   }
 
-//  it should "have a method that changes the price" in {
-//    val offer = new Offer()
-//    val updatedOffer = offer.ChangePrice(5.05)
-//
-//    updatedOffer.currentPrice = 5.05
-//  }
+  it should "be able to change its price" in {
+    val offer = new Offer(4.15)
+    val updatedOffer = offer.ChangePrice(5.05)
+
+    offer.currentPrice shouldEqual 4.15
+    updatedOffer.currentPrice shouldEqual 5.05
+  }
 
 }

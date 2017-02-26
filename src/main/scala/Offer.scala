@@ -10,6 +10,8 @@ class Offer(startingPrice: Double) {
   cal.set(2017, 2, 26)
   val lastModified = cal.getTime
 
-
+  def ChangePrice(price:Double): Offer = {
+    new Offer(price)
+  }
 
 }
