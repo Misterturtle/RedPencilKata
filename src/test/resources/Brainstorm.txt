@@ -1,0 +1,35 @@
+??What keeps track of days?
+    -A controller class?
+??What crosses out the old price in red and displays the new price?
+    -Not in the scope of this kata. While creating an Amazon style marketplace would be cool, I'll need to be paid for that.
+    -Just need to make it easily detectable if the offer is on promotion or not.
+??What keeps track of available offers?
+    -A controller class?
+??What will the input look like?
+    -A command prompt that accepts certain commands that I will add in the readme. Ex: !CreateOffer !ChangePrice
+??What accepts input?
+    -Either the controller class waits for input or another class interprets cmd prompt commands and gives commands to controller class
+??Are we getting the start/end date from the real world computer clock or simulate days?
+    -I'm leaning towards simulating days if that is acceptable for this kata.
+
+//An offer is an object
+    -It has a price
+    -It has a last modified date
+    -It has a change price method that checks for red pencil promotion activation/deactivation.
+        *(Since that is really the only time we activate/deactivate a promo.
+
+
+//A promotion is an object
+    -It has a start date and an end date.
+    -It really shouldn't keep track of days and time besides start/end date.
+    -It actually is more of a trait than a different class. It doesn't actually do anything.
+
+
+//A controller is an object
+    -It will have a list of available offers
+    -It will have a method that can skip days
+    -It will have a current day
+
+
+
+    **I think thats good enough for now. I have a good understanding of where to start. Onto the tests!!
