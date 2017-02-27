@@ -7,4 +7,8 @@ import org.joda.time.LocalDate
 class Promotion(val originalPrice: Double, updatedPrice: Double, val startDate: LocalDate, lastModifiedDate:LocalDate, currentDate: LocalDate, id:Int) extends Offer(updatedPrice, lastModifiedDate, currentDate, id){
 
 
+  override def ChangePrice(price:Double):Promotion = {
+    new Promotion(originalPrice, price, startDate, currentDate, currentDate, id)
+  }
+
 }
