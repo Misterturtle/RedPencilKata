@@ -65,20 +65,30 @@ class OfferTests extends FlatSpec with Matchers {
     stableController.offers.head shouldBe a [Promotion]
   }
 
-//  it should "be able to detect a previously expired promotion and not active the offer again" in {
-//    val initController = parentController.SetDate(new LocalDate(2017,2,27))
-//    val controllerWithOffer = initController.CreateOffer(new Offer(10, initController.date, initController.date, 42))
-//    val controllerWithPromo = controllerWithOffer.ChangeOfferPrice(42, 8)
-//    controllerWithPromo.offers.head shouldBe a [Promotion]
-//
-//    //Set the controller to 31 days later
-//    val controllerWithExpiredPromo = controllerWithPromo.SetDate(new LocalDate(2017, 3, 30))
-//    controllerWithExpiredPromo.offers.head should not be a [Promotion]
-//
-//    //This should not reactivate the promotion
-//    controllerWithExpiredPromo.ChangeOfferPrice(42, 7.2)
-//
-//  }
+  it should "be able to reactive a promotion 31 days after the expiration date of the promo but no sooner" in {
+    val startingPromoDate = new LocalDate(2017, 2,27)
+    val promoExpirationDate = new LocalDate(2017, 3,30)
+    val offerRenewalDate = new LocalDate(2017, 4, 30)
+
+    val initController = parentController.SetDate(startingPromoDate).CreateOffer(new Promotion(10, 8, startingPromoDate, startingPromoDate, startingPromoDate, 42))
+
+    //Set the controller to 31 days after promotion start date
+    val controllerWithExpiredPromo = initController.SetDate(promoExpirationDate)
+    controllerWithExpiredPromo.offers.head shouldBe a [ExpiredPromotion]
+
+    //This should not reactivate the promotion
+    controllerWithExpiredPromo.ChangeOfferPrice(42, 7.2).offers.head shouldBe a [ExpiredPromotion]
+
+    //Set the controller to 30 days after the expiration date
+    controllerWithExpiredPromo.SetDate(new LocalDate(2017, 4, 29)).offers.head shouldBe a [ExpiredPromotion]
+
+    //Set the controller to 31 days after the expiration date
+    controllerWithExpiredPromo.SetDate(offerRenewalDate).offers.head should not be a [ExpiredPromotion]
+    controllerWithExpiredPromo.SetDate(offerRenewalDate).offers.head should not be a [Promotion]
+
+    //Change the price of an offer 31 days after the previous promo expiration date
+    controllerWithExpiredPromo.SetDate(offerRenewalDate).ChangeOfferPrice(42, 7.2).offers.head shouldBe a [Promotion]
+  }
 
 
 }

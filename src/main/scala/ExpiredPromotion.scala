@@ -12,4 +12,8 @@ class ExpiredPromotion(currentPrice: Double, lastModifiedDate: LocalDate, curren
     //At this point, if the price is changed, a new promotion will be created again
 
 
+
+  override def ChangePrice(price:Double): ExpiredPromotion = {
+    new ExpiredPromotion(price, lastModifiedDate, currentDate, expirationDate, id)
+  }
 }
