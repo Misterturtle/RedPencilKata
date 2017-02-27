@@ -32,16 +32,19 @@ class OfferTests extends FlatSpec with Matchers {
     updatedOffer.currentPrice shouldEqual 5.05
   }
 
-  it should "accept but not require a date during creation" in {
-    val offerWithDate = new Offer(5.5, new LocalDate(2017, 2,2))
-    val offerWithoutDate = new Offer(5.5)
 
-    offerWithDate.lastModified shouldEqual new LocalDate(2017,2,2)
-    offerWithoutDate.lastModified shouldEqual mockControllerDate
-  }
+    //Deprecated - An offer should obtain the current date from controller
+
+//  it should "accept but not require a date during creation" in {
+//    val offerWithDate = new Offer(5.5, new LocalDate(2017, 2,2))
+//    val offerWithoutDate = new Offer(5.5)
+//
+//    offerWithDate.lastModified shouldEqual new LocalDate(2017,2,2)
+//    offerWithoutDate.lastModified shouldEqual mockControllerDate
+//  }
 
   it should "be able to activate the red pencil promotion" in {
-    val offerWithPromotion = new Offer(1).ActivatePromotion()
+    val offerWithPromotion = new Offer(1).ActivatePromotion(5)
     val offerWithoutPromotion = new Offer(1)
 
     offerWithPromotion shouldBe a [Promotion]

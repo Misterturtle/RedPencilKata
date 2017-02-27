@@ -4,19 +4,19 @@ import org.joda.time.LocalDate
 /**
   * Created by Harambe on 2/26/2017.
   */
-class Offer(startingPrice: Double, lastModifiedDate: LocalDate = new LocalDate(1,1,1)) {
-
+class Offer(startingPrice: Double) {
   val mockControllerDate = new LocalDate(1,1,1)
-
   val currentPrice:Double = startingPrice
-  val lastModified = lastModifiedDate
+
+  //An offer should only care about the last time it was updated. A promotion, however, cares about original and lastModified.
+  val lastModified = mockControllerDate
 
   def ChangePrice(price:Double): Offer = {
-    new Offer(price, mockControllerDate)
+    new Offer(price)
   }
 
-  def ActivatePromotion(): Promotion = {
-    new Promotion(currentPrice, mockControllerDate)
+  def ActivatePromotion(newPrice: Double): Promotion = {
+    new Promotion(currentPrice, newPrice, mockControllerDate)
   }
 
 
