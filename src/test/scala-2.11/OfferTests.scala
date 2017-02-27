@@ -65,5 +65,20 @@ class OfferTests extends FlatSpec with Matchers {
     stableController.offers.head shouldBe a [Promotion]
   }
 
+//  it should "be able to detect a previously expired promotion and not active the offer again" in {
+//    val initController = parentController.SetDate(new LocalDate(2017,2,27))
+//    val controllerWithOffer = initController.CreateOffer(new Offer(10, initController.date, initController.date, 42))
+//    val controllerWithPromo = controllerWithOffer.ChangeOfferPrice(42, 8)
+//    controllerWithPromo.offers.head shouldBe a [Promotion]
+//
+//    //Set the controller to 31 days later
+//    val controllerWithExpiredPromo = controllerWithPromo.SetDate(new LocalDate(2017, 3, 30))
+//    controllerWithExpiredPromo.offers.head should not be a [Promotion]
+//
+//    //This should not reactivate the promotion
+//    controllerWithExpiredPromo.ChangeOfferPrice(42, 7.2)
+//
+//  }
+
 
 }
