@@ -10,10 +10,10 @@ class Controller(val date: LocalDate, val offers:List[Offer]) {
     val updatedOffers = offers.foldLeft(List[Offer]()){ (r,c) =>
       c match{
         case promo:Promotion =>
-          r ::: List(new Promotion(promo.originalPrice, promo.currentPrice, promo.startDate, promo.lastModifiedDate, newDate))
+          r ::: List(new Promotion(promo.originalPrice, promo.currentPrice, promo.startDate, promo.lastModifiedDate, newDate, c.id))
 
         case offer:Offer =>
-          r ::: List(new Offer(c.currentPrice, c.lastModifiedDate, newDate))
+          r ::: List(new Offer(c.currentPrice, c.lastModifiedDate, newDate, c.id))
       }
     }
     new Controller(newDate, updatedOffers)
@@ -23,4 +23,15 @@ class Controller(val date: LocalDate, val offers:List[Offer]) {
     new Controller(date, offers ::: List(offer))
   }
 
+  def ChangeOfferPrice(offer:Offer, price:Double): Controller = {
+        val updatedOffers = offers.foldLeft(List[Offer]()){ (r,c) =>
+          c match {
+            case `offer` =>
+              r ::: List(offer.ChangePrice(price))
+            case anyOtherOffer =>
+              r ::: List(anyOtherOffer)
+          }
+    }
+    new Controller(date, updatedOffers)
+  }
 }
