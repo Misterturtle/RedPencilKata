@@ -40,4 +40,15 @@ class OfferTests extends FlatSpec with Matchers {
     offerWithoutDate.lastModified shouldEqual mockControllerDate
   }
 
+  it should "be able to activate the red pencil promotion" in {
+    val offerWithPromotion = new Offer(1).ActivatePromotion()
+    val offerWithoutPromotion = new Offer(1)
+
+    offerWithPromotion shouldBe a [Promotion]
+    offerWithoutPromotion should not be a [Promotion]
+  }
+
+
+
+
 }

@@ -15,4 +15,10 @@ class Offer(startingPrice: Double, lastModifiedDate: LocalDate = new LocalDate(1
     new Offer(price, mockControllerDate)
   }
 
+  def ActivatePromotion(): Promotion = {
+    new Promotion(currentPrice, mockControllerDate)
+  }
+
+
+
 }
