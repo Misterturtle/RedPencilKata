@@ -4,9 +4,7 @@ import org.joda.time.LocalDate
   * Created by Harambe on 2/27/2017.
   */
 
-class Promotion(startingPrice: Double, updatedPrice: Double, startingDate: LocalDate) extends Offer(updatedPrice) {
+class Promotion(val originalPrice: Double, val updatedPrice: Double, val startDate: LocalDate, parentController: Controller) extends Offer(updatedPrice, parentController) {
 
-  val originalPrice = startingPrice
-  val originalDate = startingDate
 
 }
