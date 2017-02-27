@@ -1,5 +1,5 @@
 import org.joda.time.LocalDate
-import org.scalatest.{Matchers, FlatSpec}
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
   * Created by Harambe on 2/26/2017.
