@@ -32,4 +32,12 @@ class PromotionTests extends FlatSpec with Matchers {
     controller.ChangeOfferPrice(42, 8.1).offers.head shouldBe a [Offer]
   }
 
+  it should "end promotion if price is decreased past 30% of original price" in {
+    controller.ChangeOfferPrice(42, 7).offers.head shouldBe a [Promotion]
+    controller.ChangeOfferPrice(42, 6.9).offers.head should not be a [Promotion]
+
+
+
+  }
+
 }

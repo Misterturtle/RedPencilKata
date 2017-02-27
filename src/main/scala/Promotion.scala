@@ -8,10 +8,9 @@ class Promotion(val originalPrice: Double, updatedPrice: Double, val startDate: 
 
 
   override def ChangePrice(price:Double):Offer = {
-    if(price > currentPrice)
-      new Offer(price, currentDate, currentDate, id)
+    if(price < currentPrice && price >= originalPrice * .7)
+      new Promotion(originalPrice, price, startDate, currentDate, currentDate, id)
     else
-    new Promotion(originalPrice, price, startDate, currentDate, currentDate, id)
+      new Offer(price, currentDate, currentDate, id)
   }
-
 }
