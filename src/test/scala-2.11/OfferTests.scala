@@ -9,23 +9,23 @@ class OfferTests extends FlatSpec with Matchers {
   val parentController = new Controller(new LocalDate(1,1,1), List())
 
   "An offer" should "have a positive price" in {
-    val offer = new Offer(0.001, parentController)
+    val offer = new Offer(0.001, parentController.date, parentController.date)
     offer.currentPrice should be > 0.00
   }
 
   it should "have a last modified date" in {
-    val offer = new Offer(0.001, parentController)
+    val offer = new Offer(0.001, parentController.date, parentController.date)
     offer.lastModifiedDate shouldBe a [LocalDate]
   }
 
   it should "require a price to be created" in {
     val price = 9.5
-    val offer = new Offer(price, parentController)
+    val offer = new Offer(price, parentController.date, parentController.date)
     offer.currentPrice shouldEqual 9.5
   }
 
   it should "be able to change its price" in {
-    val offer = new Offer(4.15, parentController)
+    val offer = new Offer(4.15, parentController.date, parentController.date)
     val updatedOffer = offer.ChangePrice(5.05)
 
     offer.currentPrice shouldEqual 4.15
@@ -44,14 +44,12 @@ class OfferTests extends FlatSpec with Matchers {
 //  }
 
   it should "be able to activate the red pencil promotion" in {
-    val offerWithPromotion = new Offer(1, parentController).ActivatePromotion(5)
-    val offerWithoutPromotion = new Offer(1, parentController)
+    val offerWithPromotion = new Offer(1, parentController.date, parentController.date).ActivatePromotion(5)
+    val offerWithoutPromotion = new Offer(1, parentController.date, parentController.date)
 
     offerWithPromotion shouldBe a [Promotion]
     offerWithoutPromotion should not be a [Promotion]
   }
-
-
 
 
 }
