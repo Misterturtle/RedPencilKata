@@ -23,11 +23,13 @@ class PromotionTests extends FlatSpec with Matchers {
         promo.originalPrice shouldEqual 10
       case anythingElse =>
       fail()
-
     }
-
-
   }
 
+  it should "end promotion if price is increased" in {
+    controller.ChangeOfferPrice(42, 8.1).offers.head should not be a [Promotion]
+    controller.ChangeOfferPrice(42, 8.1).offers.head should not be a [ExpiredPromotion]
+    controller.ChangeOfferPrice(42, 8.1).offers.head shouldBe a [Offer]
+  }
 
 }
