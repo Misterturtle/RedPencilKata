@@ -61,6 +61,20 @@ class ControllerTests extends FlatSpec with Matchers {
     }
   }
 
+  it should "check for expired promotions upon changing date" in {
+
+    val controllerWithPromos = controller.SetDate(new LocalDate(2017, 2, 27)).CreateOffer(new Offer(10, new LocalDate(2017, 1, 1), new LocalDate(2017,2,27), 32).ChangePrice(8))
+    controllerWithPromos.offers.head shouldBe a [Promotion]
+
+    //Set controller date 30 days after promotion creation
+    controllerWithPromos.SetDate(new LocalDate(2017, 3, 28)).offers.head shouldBe a [Promotion]
+    //Set controller date 31 days after promotion creation
+    controllerWithPromos.SetDate(new LocalDate(2017,3,30)).offers.head should not be a [Promotion]
+
+
+
+  }
+
 
 
 
