@@ -23,13 +23,13 @@ class Controller(val date: LocalDate, val offers:List[Offer]) {
     new Controller(date, offers ::: List(offer))
   }
 
-  def ChangeOfferPrice(offer:Offer, price:Double): Controller = {
+  def ChangeOfferPrice(offerID:Int, price:Double): Controller = {
         val updatedOffers = offers.foldLeft(List[Offer]()){ (r,c) =>
-          c match {
-            case `offer` =>
-              r ::: List(offer.ChangePrice(price))
+          c.id match {
+            case `offerID` =>
+              r ::: List(c.ChangePrice(price))
             case anyOtherOffer =>
-              r ::: List(anyOtherOffer)
+              r ::: List(c)
           }
     }
     new Controller(date, updatedOffers)

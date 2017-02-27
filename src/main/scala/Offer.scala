@@ -19,7 +19,7 @@ class Offer(val currentPrice: Double, val lastModifiedDate:LocalDate, val curren
   }
 
   def CheckStablePrices():Boolean = {
-    if(lastModifiedDate.plusDays(30).isAfter(currentDate) || lastModifiedDate.plusDays(30).isEqual(currentDate))
+    if(lastModifiedDate.plusDays(30).isBefore(currentDate) || lastModifiedDate.plusDays(30).isEqual(currentDate))
     true
     else false
   }

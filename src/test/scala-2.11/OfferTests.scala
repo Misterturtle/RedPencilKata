@@ -41,7 +41,7 @@ class OfferTests extends FlatSpec with Matchers {
   }
 
   it should "check price changes for ranges of 5% to 30% and activate promotion" in {
-    val offer = new Offer(10, parentController.date, parentController.date, 1)
+    val offer = new Offer(10, new LocalDate(1,1,1), new LocalDate(2,1,1), 1)
     val offerWithSmallPriceChange = offer.ChangePrice(10.49)
     val promoWithSmallPriceChange = offer.ChangePrice(10.5)
     val offerWithLargePriceChange = offer.ChangePrice(13.01)
@@ -50,20 +50,20 @@ class OfferTests extends FlatSpec with Matchers {
     offerWithSmallPriceChange should not be a [Promotion]
     promoWithSmallPriceChange shouldBe a [Promotion]
     offerWithLargePriceChange should not be a [Promotion]
-    promoWithSmallPriceChange shouldBe a [Promotion]
+    promoWithLargePriceChange shouldBe a [Promotion]
   }
 
-//  it should "check price changes for stable prices for 30 days" in {
-//    val offer = new Offer(10, new LocalDate(2017,2,27), new LocalDate(2017,2,27))
-//    val controllerWithOffer =  parentController.CreateOffer(offer)
-//    //Set controller to 29 days later
-//    val nonStableController = controllerWithOffer.SetDate(new LocalDate(2017,3, 28)).ChangeOfferPrice(offer, 12)
-//    nonStableController.offers.head should not be a [Promotion]
-//
-//    //Set controller to 30 days later
-//    val stableController =  controllerWithOffer.SetDate(new LocalDate(2017, 3, 29)).ChangeOfferPrice(offer, 12)
-//    stableController.offers.head shouldBe a [Promotion]
-//  }
+  it should "check price changes for stable prices for 30 days" in {
+    val offer = new Offer(10, new LocalDate(2017,2,27), new LocalDate(2017,2,27), 82)
+    val controllerWithOffer =  parentController.CreateOffer(offer)
+    //Set controller to 29 days later
+    val nonStableController = controllerWithOffer.SetDate(new LocalDate(2017,3, 28)).ChangeOfferPrice(82, 12)
+    nonStableController.offers.head should not be a [Promotion]
+
+    //Set controller to 30 days later
+    val stableController =  controllerWithOffer.SetDate(new LocalDate(2017, 3, 29)).ChangeOfferPrice(82, 12)
+    stableController.offers.head shouldBe a [Promotion]
+  }
 
 
 }

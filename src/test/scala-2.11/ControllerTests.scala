@@ -42,7 +42,7 @@ class ControllerTests extends FlatSpec with Matchers {
   it should "update list of offers when an offer changes price" in {
     val offer = new Offer(10, controller.date, controller.date, 1)
     val controllerWithOffer = controller.CreateOffer(offer)
-    val controllerWithNewPrices = controllerWithOffer.ChangeOfferPrice(offer, 12)
+    val controllerWithNewPrices = controllerWithOffer.ChangeOfferPrice(1, 12)
 
     controllerWithOffer.offers.head.currentPrice shouldEqual 10
     controllerWithNewPrices.offers.head.currentPrice shouldEqual 12
@@ -50,7 +50,7 @@ class ControllerTests extends FlatSpec with Matchers {
 
   it should "find an offer based on id after offer change price" in {
     val offer = new Offer(10, controller.date, controller.date, 17)
-    val controllerWithOffer = controller.CreateOffer(offer).ChangeOfferPrice(offer, 15)
+    val controllerWithOffer = controller.CreateOffer(offer).ChangeOfferPrice(17, 15)
 
     controllerWithOffer.offers.find(_.id == 17) match {
       case Some(someOffer:Offer)=>
@@ -60,6 +60,7 @@ class ControllerTests extends FlatSpec with Matchers {
         fail()
     }
   }
+
 
 
 
