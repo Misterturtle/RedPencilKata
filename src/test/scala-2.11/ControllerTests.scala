@@ -30,6 +30,16 @@ class ControllerTests extends FlatSpec with Matchers {
     updatedController.offers.last.currentDate shouldEqual new LocalDate(5,5,5)
   }
 
+  it should "update children promotions currentDate when setting a new date" in {
+    val controllerWithPromotions = controller.CreateOffer(new Offer(1.44, controller.date, controller.date).ActivatePromotion(5)).CreateOffer(new Offer(2.9, controller.date, controller.date).ActivatePromotion(10))
+    controllerWithPromotions.offers.head.currentDate shouldEqual new LocalDate(1,1,1)
+    controllerWithPromotions.offers.last.currentDate shouldEqual new LocalDate(1,1,1)
+    val updatedController = controllerWithPromotions.SetDate(new LocalDate(5,5,5))
+    updatedController.offers.head.currentDate shouldEqual new LocalDate(5,5,5)
+    updatedController.offers.last.currentDate shouldEqual new LocalDate(5,5,5)
+  }
+
+
 
 
 }
