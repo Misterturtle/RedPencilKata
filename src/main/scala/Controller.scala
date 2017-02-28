@@ -19,7 +19,7 @@ class Controller(val date: LocalDate, val offers:List[Offer]) {
             if (expiredPromo.expirationDate.plusDays(30).isBefore(newDate))
               r ::: List(new Offer(expiredPromo.currentPrice, expiredPromo.lastModifiedDate, newDate, expiredPromo.id))
             else
-              r ::: List(expiredPromo)
+              r ::: List(new ExpiredPromotion(expiredPromo.currentPrice, expiredPromo.lastModifiedDate, newDate, expiredPromo.expirationDate, expiredPromo.id))
 
           case offer: Offer =>
             r ::: List(new Offer(c.currentPrice, c.lastModifiedDate, newDate, c.id))

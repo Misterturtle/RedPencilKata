@@ -9,23 +9,26 @@ class ControllerTests extends FlatSpec with Matchers {
   val controller = new Controller(new LocalDate(2017,2,27), List())
 
   "A controller" should "be able to set the current date(simulated)" in {
-
     val newDate = new LocalDate(5,5,5)
-    controller.SetDate(newDate).date shouldEqual new Controller(newDate, controller.offers).date
+    controller.SetDate(newDate).date shouldEqual newDate
   }
 
   it should "be able to add a new offer" in {
-
     val newOffer1 = new Offer(1.1, controller.date, controller.date, 5)
     val newOffer2 = new Offer(2.2, controller.date, controller.date, 5)
     controller.CreateOffer(newOffer1).CreateOffer(newOffer2).offers shouldEqual List(newOffer1, newOffer2)
   }
 
   it should "update children offers currentDate when setting a new date" in {
-    val controllerWithOffers = controller.CreateOffer(new Offer(1.44, controller.date, controller.date, 2)).CreateOffer(new Offer(2.9, controller.date, controller.date,3))
+    //Add an offer, a promotion, and an expired promotion
+    val controllerWithOffers = controller.CreateOffer(new Offer(1.44, controller.date, controller.date, 2)).CreateOffer(new Promotion(10, 8, controller.date, controller.date, controller.date, 42)).CreateOffer(new ExpiredPromotion(10, controller.date, controller.date, controller.date, 41))
+    //Make sure the offers have the current date
     controllerWithOffers.offers.head.currentDate shouldEqual new LocalDate(2017,2,27)
+    controllerWithOffers.offers.tail.head.currentDate shouldEqual new LocalDate(2017,2, 27)
     controllerWithOffers.offers.last.currentDate shouldEqual new LocalDate(2017,2,27)
+    //Set date and confirm change
     controllerWithOffers.SetDate(new LocalDate(2017,3,7)).offers.head.currentDate shouldEqual new LocalDate(2017, 3, 7)
+    controllerWithOffers.SetDate(new LocalDate(2017,3,7)).offers.tail.head.currentDate shouldEqual new LocalDate(2017, 3, 7)
     controllerWithOffers.SetDate(new LocalDate(2017,3,7)).offers.last.currentDate shouldEqual new LocalDate(2017, 3, 7)
   }
 
