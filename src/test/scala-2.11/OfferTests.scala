@@ -6,8 +6,8 @@ import org.scalatest.{FlatSpec, Matchers}
   */
 class OfferTests extends FlatSpec with Matchers {
 
-  val controller = new Controller(new LocalDate(1,1,1), List())
-  val baseOffer = new Offer(0.001, controller.date, controller.date, 1)
+  val baseOffer = new Offer(10, new LocalDate(2017,2,27), new LocalDate(2017,2,27), 1)
+  val controller:Controller = new Controller(new LocalDate(2017,2,27), List(baseOffer))
 
   "An offer" should "have a positive price" in {
     baseOffer.currentPrice should be > 0.00
@@ -24,34 +24,27 @@ class OfferTests extends FlatSpec with Matchers {
   }
 
   it should "be able to change its price" in {
-    val updatedOffer = baseOffer.ChangePrice(5.05)
-    baseOffer.currentPrice shouldEqual   .001
-    updatedOffer.currentPrice shouldEqual 5.05
+    baseOffer.currentPrice shouldEqual 10
+    baseOffer.ChangePrice(5.05).currentPrice shouldEqual 5.05
   }
 
-  it should "check price changes for ranges of 5% to 30% and activate promotion" in {
-    val offer = new Offer(10, new LocalDate(1,1,1), new LocalDate(2,1,1), 1)
-    val offerWithSmallPriceChange = offer.ChangePrice(9.51)
-    val promoWithSmallPriceChange = offer.ChangePrice(9.5)
-    val offerWithLargePriceChange = offer.ChangePrice(6.99)
-    val promoWithLargePriceChange = offer.ChangePrice(7)
-
-    offerWithSmallPriceChange should not be a [Promotion]
-    promoWithSmallPriceChange shouldBe a [Promotion]
-    offerWithLargePriceChange should not be a [Promotion]
-    promoWithLargePriceChange shouldBe a [Promotion]
+  it should "check price decreases for ranges of 5% to 30% and activate promotion" in {
+    val stableOffer = new Offer(10, controller.date, new LocalDate(2017, 4, 30), 42)
+    //Decrease price to just below 5%
+    stableOffer.ChangePrice(9.51) should not be a [Promotion]
+    //Decrease price exactly 5%
+    stableOffer.ChangePrice(9.5) shouldBe a [Promotion]
+    //Decrease price just over 30%
+    stableOffer.ChangePrice(6.99) should not be a [Promotion]
+    //Decrease price exactly 30%
+    stableOffer.ChangePrice(7) shouldBe a [Promotion]
   }
 
-  it should "check price changes for stable prices for 30 days" in {
-    val offer = new Offer(10, new LocalDate(2017,2,27), new LocalDate(2017,2,27), 82)
-    val controllerWithOffer =  controller.CreateOffer(offer)
-    //Set controller to 29 days later
-    val nonStableController = controllerWithOffer.SetDate(new LocalDate(2017,3, 28)).ChangeOfferPrice(82, 8)
-    nonStableController.offers.head should not be a [Promotion]
-
+  it should "create promotion if price change with stable prices for minimum 30 full days" in {
+    //Set controller to 29 days later and change price
+    controller.SetDate(new LocalDate(2017,3, 28)).ChangeOfferPrice(1, 8).offers.head should not be a [Promotion]
     //Set controller to 30 days later
-    val stableController =  controllerWithOffer.SetDate(new LocalDate(2017, 3, 29)).ChangeOfferPrice(82, 8)
-    stableController.offers.head shouldBe a [Promotion]
+    controller.SetDate(new LocalDate(2017, 3, 29)).ChangeOfferPrice(1, 8).offers.head shouldBe a [Promotion]
   }
 
   it should "be able to reactive a promotion 31 days after the expiration date of the promo but no sooner" in {
@@ -59,25 +52,24 @@ class OfferTests extends FlatSpec with Matchers {
     val promoExpirationDate = new LocalDate(2017, 3,30)
     val offerRenewalDate = new LocalDate(2017, 4, 30)
 
-    val initController = controller.SetDate(startingPromoDate).CreateOffer(new Promotion(10, 8, startingPromoDate, startingPromoDate, startingPromoDate, 42))
+    val initController = new Controller(startingPromoDate, List(new Promotion(10, 8, startingPromoDate, startingPromoDate, startingPromoDate, 42)))
 
     //Set the controller to 31 days after promotion start date
     val controllerWithExpiredPromo = initController.SetDate(promoExpirationDate)
     controllerWithExpiredPromo.offers.head shouldBe a [ExpiredPromotion]
 
-    //This should not reactivate the promotion
+    //Changing price during expired period should not reactivate the promotion.
     controllerWithExpiredPromo.ChangeOfferPrice(42, 7.2).offers.head shouldBe a [ExpiredPromotion]
 
-    //Set the controller to 30 days after the expiration date
+    //Set the controller to 30 days after the expiration date. (Last day of expired status)
     controllerWithExpiredPromo.SetDate(new LocalDate(2017, 4, 29)).offers.head shouldBe a [ExpiredPromotion]
 
-    //Set the controller to 31 days after the expiration date
+    //Set the controller to 31 days after the expiration date. (First day of valid renewal)
     controllerWithExpiredPromo.SetDate(offerRenewalDate).offers.head should not be a [ExpiredPromotion]
     controllerWithExpiredPromo.SetDate(offerRenewalDate).offers.head should not be a [Promotion]
+    controllerWithExpiredPromo.SetDate(offerRenewalDate).offers.head shouldBe a [Offer]
 
-    //Change the price of an offer 31 days after the previous promo expiration date
+    //Change the price of an offer on the first day of valid renewal.
     controllerWithExpiredPromo.SetDate(offerRenewalDate).ChangeOfferPrice(42, 7.2).offers.head shouldBe a [Promotion]
   }
-
-
 }
