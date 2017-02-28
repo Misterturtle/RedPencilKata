@@ -6,38 +6,27 @@ import org.scalatest.{FlatSpec, Matchers}
   */
 class OfferTests extends FlatSpec with Matchers {
 
-  val parentController = new Controller(new LocalDate(1,1,1), List())
+  val controller = new Controller(new LocalDate(1,1,1), List())
+  val baseOffer = new Offer(0.001, controller.date, controller.date, 1)
 
   "An offer" should "have a positive price" in {
-    val offer = new Offer(0.001, parentController.date, parentController.date, 1)
-    offer.currentPrice should be > 0.00
+    baseOffer.currentPrice should be > 0.00
   }
 
   it should "have a last modified date" in {
-    val offer = new Offer(0.001, parentController.date, parentController.date, 1)
-    offer.lastModifiedDate shouldBe a [LocalDate]
+    baseOffer.lastModifiedDate shouldBe a [LocalDate]
   }
 
   it should "require a price to be created" in {
     val price = 9.5
-    val offer = new Offer(price, parentController.date, parentController.date, 1)
+    val offer = new Offer(price, controller.date, controller.date, 1)
     offer.currentPrice shouldEqual 9.5
   }
 
   it should "be able to change its price" in {
-    val offer = new Offer(4.15, parentController.date, parentController.date, 1)
-    val updatedOffer = offer.ChangePrice(5.05)
-
-    offer.currentPrice shouldEqual 4.15
+    val updatedOffer = baseOffer.ChangePrice(5.05)
+    baseOffer.currentPrice shouldEqual   .001
     updatedOffer.currentPrice shouldEqual 5.05
-  }
-
-  it should "be able to activate the red pencil promotion" in {
-    val offerWithPromotion = new Offer(1, parentController.date, parentController.date, 1).ActivatePromotion(5)
-    val offerWithoutPromotion = new Offer(1, parentController.date, parentController.date, 1)
-
-    offerWithPromotion shouldBe a [Promotion]
-    offerWithoutPromotion should not be a [Promotion]
   }
 
   it should "check price changes for ranges of 5% to 30% and activate promotion" in {
@@ -55,7 +44,7 @@ class OfferTests extends FlatSpec with Matchers {
 
   it should "check price changes for stable prices for 30 days" in {
     val offer = new Offer(10, new LocalDate(2017,2,27), new LocalDate(2017,2,27), 82)
-    val controllerWithOffer =  parentController.CreateOffer(offer)
+    val controllerWithOffer =  controller.CreateOffer(offer)
     //Set controller to 29 days later
     val nonStableController = controllerWithOffer.SetDate(new LocalDate(2017,3, 28)).ChangeOfferPrice(82, 8)
     nonStableController.offers.head should not be a [Promotion]
@@ -70,7 +59,7 @@ class OfferTests extends FlatSpec with Matchers {
     val promoExpirationDate = new LocalDate(2017, 3,30)
     val offerRenewalDate = new LocalDate(2017, 4, 30)
 
-    val initController = parentController.SetDate(startingPromoDate).CreateOffer(new Promotion(10, 8, startingPromoDate, startingPromoDate, startingPromoDate, 42))
+    val initController = controller.SetDate(startingPromoDate).CreateOffer(new Promotion(10, 8, startingPromoDate, startingPromoDate, startingPromoDate, 42))
 
     //Set the controller to 31 days after promotion start date
     val controllerWithExpiredPromo = initController.SetDate(promoExpirationDate)

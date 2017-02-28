@@ -6,7 +6,7 @@ import org.scalatest.{FlatSpec, Matchers}
   */
 class ControllerTests extends FlatSpec with Matchers {
 
-  val controller = new Controller(new LocalDate(1,1,1), List())
+  val controller = new Controller(new LocalDate(2017,2,27), List())
 
   "A controller" should "be able to set the current date(simulated)" in {
 
@@ -23,20 +23,16 @@ class ControllerTests extends FlatSpec with Matchers {
 
   it should "update children offers currentDate when setting a new date" in {
     val controllerWithOffers = controller.CreateOffer(new Offer(1.44, controller.date, controller.date, 2)).CreateOffer(new Offer(2.9, controller.date, controller.date,3))
-    controllerWithOffers.offers.head.currentDate shouldEqual new LocalDate(1,1,1)
-    controllerWithOffers.offers.last.currentDate shouldEqual new LocalDate(1,1,1)
-    val updatedController = controllerWithOffers.SetDate(new LocalDate(5,5,5))
-    updatedController.offers.head.currentDate shouldEqual new LocalDate(5,5,5)
-    updatedController.offers.last.currentDate shouldEqual new LocalDate(5,5,5)
+    controllerWithOffers.offers.head.currentDate shouldEqual new LocalDate(2017,2,27)
+    controllerWithOffers.offers.last.currentDate shouldEqual new LocalDate(2017,2,27)
+    controllerWithOffers.SetDate(new LocalDate(2017,3,7)).offers.head.currentDate shouldEqual new LocalDate(2017, 3, 7)
+    controllerWithOffers.SetDate(new LocalDate(2017,3,7)).offers.last.currentDate shouldEqual new LocalDate(2017, 3, 7)
   }
 
   it should "update children promotions currentDate when setting a new date" in {
-    val controllerWithPromotions = controller.CreateOffer(new Offer(1.44, controller.date, controller.date, 1).ActivatePromotion(5)).CreateOffer(new Offer(2.9, controller.date, controller.date, 2).ActivatePromotion(10))
-    controllerWithPromotions.offers.head.currentDate shouldEqual new LocalDate(1,1,1)
-    controllerWithPromotions.offers.last.currentDate shouldEqual new LocalDate(1,1,1)
-    val updatedController = controllerWithPromotions.SetDate(new LocalDate(5,5,5))
-    updatedController.offers.head.currentDate shouldEqual new LocalDate(5,5,5)
-    updatedController.offers.last.currentDate shouldEqual new LocalDate(5,5,5)
+    val controllerWithPromotions = controller.CreateOffer(new Promotion(10, 9, controller.date, controller.date, controller.date, 42))
+    controllerWithPromotions.offers.head.currentDate shouldEqual new LocalDate(2017,2,27)
+    controllerWithPromotions.SetDate(new LocalDate(2017,3,5)).offers.head.currentDate shouldEqual new LocalDate(2017,3,5)
   }
 
   it should "update list of offers when an offer changes price" in {

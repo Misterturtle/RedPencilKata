@@ -15,10 +15,6 @@ class Offer(val currentPrice: Double, val lastModifiedDate:LocalDate, val curren
       new Offer(price, currentDate, currentDate, id)
   }
 
-  def ActivatePromotion(newPrice: Double): Promotion = {
-    new Promotion(currentPrice, newPrice, currentDate, currentDate, currentDate, id)
-  }
-
   def CheckStablePrices():Boolean = {
     if(lastModifiedDate.plusDays(30).isBefore(currentDate) || lastModifiedDate.plusDays(30).isEqual(currentDate))
     true
