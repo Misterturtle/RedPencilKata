@@ -61,19 +61,19 @@ class ControllerTests extends FlatSpec with Matchers {
     //Set controller date 30 days after promotion creation
     controllerWithPromos.SetDate(new LocalDate(2017, 3, 29)).offers.head shouldBe a [Promotion]
     //Set controller date 31 days after promotion creation
-    controllerWithPromos.SetDate(new LocalDate(2017,3,30)).offers.head shouldBe a [ExpiredPromotion]
-  }
+    controllerWithPromos.SetDate(new LocalDate(2017,3,30)).offers.head shouldBe a [ExpiredPromotion]}
 
   it should "check for valid offer renewal for expired promotions upon changing date" in {
     val startDateOfPromo = new LocalDate(2017,2,27)
     val expirationDateOfPromo = new LocalDate(2017, 3,30)
     val validRenewalDateOfPromo = new LocalDate(2017, 4, 30)
 
-
+    //Directly creating an expired promo on the first day of its expiration period.
     val controllerWithExpiredPromos = controller.SetDate(expirationDateOfPromo).CreateOffer(new ExpiredPromotion(10, startDateOfPromo, expirationDateOfPromo, expirationDateOfPromo, 42))
+    //Changing date to 30 days after expiration date (Last day of expiration period)
     val controllerWithUnstableExpiredPromo = controllerWithExpiredPromos.SetDate(new LocalDate(2017, 4,29))
     controllerWithUnstableExpiredPromo.offers.head shouldBe a [ExpiredPromotion]
-
+    //Changing date to 31 days after expiration date (First day of valid renewal period)
     val controllerWithStableExpiredPromo = controllerWithExpiredPromos.SetDate(validRenewalDateOfPromo)
     controllerWithStableExpiredPromo.offers.head should not be a [ExpiredPromotion]
   }
