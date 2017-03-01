@@ -41,10 +41,10 @@ class OfferTests extends FlatSpec with Matchers {
   }
 
   it should "create promotion if price change with stable prices for minimum 30 full days" in {
-    //Set controller to 29 days later and change price
-    controller.SetDate(new LocalDate(2017,3, 28)).ChangeOfferPrice(1, 8).offers.head should not be a [Promotion]
-    //Set controller to 30 days later
-    controller.SetDate(new LocalDate(2017, 3, 29)).ChangeOfferPrice(1, 8).offers.head shouldBe a [Promotion]
+    //Set controller to 30th day of promo and change price
+    controller.SetDate(new LocalDate(2017,3, 29)).ChangeOfferPrice(1, 8).offers.head should not be a [Promotion]
+    //Set controller to 31 days of promo later
+    controller.SetDate(new LocalDate(2017, 3, 30)).ChangeOfferPrice(1, 8).offers.head shouldBe a [Promotion]
   }
 
   it should "be able to reactive a promotion 31 days after the expiration date of the promo but no sooner" in {

@@ -7,7 +7,6 @@ import org.joda.time.LocalDate
 
 class Offer(val currentPrice: Double, val lastModifiedDate:LocalDate, val currentDate: LocalDate, val id:Int) {
 
-  //An offer should only care about the last time it was updated. A promotion, however, cares about original and lastModified.
   def ChangePrice(price:Double): Offer = {
     if(price <= currentPrice * .95 && price >= currentPrice * .7 && CheckStablePrices())
     new Promotion(currentPrice, price, currentDate, currentDate, currentDate, id)
@@ -16,9 +15,10 @@ class Offer(val currentPrice: Double, val lastModifiedDate:LocalDate, val curren
   }
 
   def CheckStablePrices():Boolean = {
-    if(lastModifiedDate.plusDays(30).isBefore(currentDate) || lastModifiedDate.plusDays(30).isEqual(currentDate))
-    true
-    else false
+    val stableDate = lastModifiedDate.plusDays(31)
+    if(currentDate.isBefore(stableDate))
+    false
+    else true
   }
 
 }
